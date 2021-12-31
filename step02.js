@@ -7,16 +7,16 @@ function main() {
   const canvas = document.querySelector('#canvas');
   const gl = canvas.getContext('webgl');
 
-  // If we don't have a GL context, give up now
+  // GL contextがなければ
   if (gl === null) {
-    alert('WebGL を初期化できません。ブラウザあーまたはマシンがサポートしていない可能性があります。');
+    alert('WebGL を初期化できません。ブラウザーまたはマシンがサポートしていない可能性があります。');
     return;
   }
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  // Vertex shader program
+  // 頂点シェーダー
   const vsSource = `
       attribute vec4 aVertexPosition;
   
@@ -28,20 +28,18 @@ function main() {
       }
     `;
 
-  // Fragment shader program
+  // フラグメントシェーダー
   const fsSource = `
       void main() {
           gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
       }
     `;
 
-  // Initialize a shader program; this is where all the lighting
-  // for the vertices and so forth is established.
+  // シェーダープログラムを初期化する。ここで頂点などに対するすべてのライティングが確立される。
   const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
 
-  // Collect all the info needed to use the shader program.
-  // Look up which attribute our shader program is using
-  // for aVertexPosition and look up uniform locations.
+  // シェーダープログラムを使用するために必要な情報をすべて収集する。
+  // シェーダプログラムがどの属性を使用しているかを調べる。をaVertexPositionに変換し、均一な位置を検索します。
   const programInfo = {
     program: shaderProgram,
     attribLocations: {
@@ -53,30 +51,29 @@ function main() {
     }
   };
 
-  // Here's where we call the routine that builds all the
-  // objects we'll be drawing.
+  // 描画するすべてのオブジェクトを構築するルーチンを呼び出します。
   const buffers = initBuffers(gl);
 
-  // Draw the scene
+  // シーンを描画する。
   drawScene(gl, programInfo, buffers);
 }
 
 //
-// Initialize a shader program, so WebGL knows how to draw our data
+// シェーダープログラムを初期化し、WebGL がデータの描画方法を認識できるようにする。
 //
 function initShaderProgram(gl, vsSource, fsSource) {
   const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
 
-  // Create the shader program
+  // シェーダープログラムを作成する。
   const shaderProgram = gl.createProgram();
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
   gl.linkProgram(shaderProgram);
 
-  // If creating the shader program failed, alert
+  // シェーダープログラムの作成に失敗した場合、アラートを出す。
   if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-    alert(`Unable to initialize the shader program: ${gl.getProgramInfoLog(shaderProgram)}`);
+    alert(`次のシェーダープログラムを初期化できません: ${gl.getProgramInfoLog(shaderProgram)}`);
     return null;
   }
 
@@ -84,21 +81,20 @@ function initShaderProgram(gl, vsSource, fsSource) {
 }
 
 //
-// creates a shader of the given type, uploads the source and
-// compiles it.
+// 与えられたタイプのシェーダを作成し、ソースをアップロードし をコンパイルします。
 //
 function loadShader(gl, type, source) {
   const shader = gl.createShader(type);
 
-  // Send the source to the shader object
+  // シェーダオブジェクトにソースを送る。
   gl.shaderSource(shader, source);
 
-  // Compile the shader program
+  // シェーダプログラムのコンパイル。
   gl.compileShader(shader);
 
-  // See if it compiled successfully
+  // コンパイルに成功したかどうかを確認する。
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    alert(`An error occurred compiling the shaders: ${gl.getShaderInfoLog(shader)}`);
+    alert(`次のシェーダーのコンパイル中にエラーがはっせいしました: ${gl.getShaderInfoLog(shader)}`);
     return null;
   }
 
@@ -106,10 +102,7 @@ function loadShader(gl, type, source) {
 }
 
 //
-// initBuffers
-//
-// Initialize the buffers we'll need. For this demo, we just
-// have one object -- a simple two-dimensional square.
+// 必要なバッファを初期化する。このデモでは オブジェクトは1つで、単純な2次元の正方形である。
 //
 function initBuffers(gl) {
   // 正方形の位置用のバッファを作成する。
@@ -130,7 +123,7 @@ function initBuffers(gl) {
 }
 
 //
-// Draw the scene.
+// シーンを描画する。
 //
 function drawScene(gl, programInfo, buffers) {
   // 黒の不透明にクリアする。
@@ -150,7 +143,7 @@ function drawScene(gl, programInfo, buffers) {
 
   // パースペクティブマトリクスを作成します．これは，カメラにおける遠近法の歪みをシミュレートするための特殊なマトリクスです．
   // 視野角は 45 度、幅と高さの比率はキャンバスの表示サイズに合わせ、カメラから 0.1 単位から 100 単位の距離にあるオブジェクトのみを表示するようにします。
-  const fieldOfView = (45 * Math.PI) / 180; // ラジアンで
+  const fieldOfView = (45 * Math.PI) / 180; // ラジアン
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const zNear = 0.1;
   const zFar = 100.0;
@@ -164,19 +157,21 @@ function drawScene(gl, programInfo, buffers) {
 
   // ここで、正方形の描画を開始したい位置まで描画位置を少し移動させます。
   mat4.translate(
-    modelViewMatrix, // destination matrix
-    modelViewMatrix, // matrix to translate
-    [-0.0, 0.0, -6.0] // amount to translate
+    modelViewMatrix, // destination マトリックス。
+    modelViewMatrix, // 変換する行列。
+    [-0.0, 0.0, -6.0] // 翻訳する量。
   );
 
   // WebGL に、位置バッファから vertexPosition 属性に位置を引き出す方法を指示します。
   {
-    const numComponents = 2; // pull out 2 values per iteration
-    const type = gl.FLOAT; // the data in the buffer is 32bit floats
-    const normalize = false; // don't normalize
-    const stride = 0; // how many bytes to get from one set of values to the next
-    // 0 = use type and numComponents above
-    const offset = 0; // how many bytes inside the buffer to start from
+    const numComponents = 2; // 反復ごとに2つの値を取り出す
+    const type = gl.FLOAT; // バッファのデータは32bit浮動小数点数
+    const normalize = false; // 正規化しない
+    // ある値のセットから次の値まで何バイトで取得するか
+    // 0 = 上記の type と numComponents を使用します。
+    const stride = 0;
+    // バッファ内の何バイトから開始するか
+    const offset = 0;
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
     gl.vertexAttribPointer(
       programInfo.attribLocations.vertexPosition,
