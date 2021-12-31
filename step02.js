@@ -39,7 +39,7 @@ function main() {
   const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
 
   // シェーダープログラムを使用するために必要な情報をすべて収集する。
-  // シェーダプログラムがどの属性を使用しているかを調べる。をaVertexPositionに変換し、均一な位置を検索します。
+  // シェーダープログラムがどの属性を使用しているかを調べる。をaVertexPositionに変換し、均一な位置を検索します。
   const programInfo = {
     program: shaderProgram,
     attribLocations: {
@@ -81,20 +81,20 @@ function initShaderProgram(gl, vsSource, fsSource) {
 }
 
 //
-// 与えられたタイプのシェーダを作成し、ソースをアップロードし をコンパイルします。
+// 与えられたタイプのシェーダーを作成し、ソースをコンパイルします。
 //
 function loadShader(gl, type, source) {
   const shader = gl.createShader(type);
 
-  // シェーダオブジェクトにソースを送る。
+  // シェーダーオブジェクトにソースを送る。
   gl.shaderSource(shader, source);
 
-  // シェーダプログラムのコンパイル。
+  // シェーダープログラムをコンパイルする。
   gl.compileShader(shader);
 
   // コンパイルに成功したかどうかを確認する。
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    alert(`次のシェーダーのコンパイル中にエラーがはっせいしました: ${gl.getShaderInfoLog(shader)}`);
+    alert(`次のシェーダーのコンパイル中にエラーが発生しました: ${gl.getShaderInfoLog(shader)}`);
     return null;
   }
 
