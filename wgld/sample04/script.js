@@ -45,15 +45,8 @@ function main() {
   const positionVbo = createVbo(gl, vertexPosition);
   const colorVbo = createVbo(gl, vertexColor);
 
-  // VBOをバインドし登録する（位置情報）
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionVbo);
-  gl.enableVertexAttribArray(attLocation[0]);
-  gl.vertexAttribPointer(attLocation[0], attStride[0], gl.FLOAT, false, 0, 0);
-
-  // VBOをバインドし登録する（色情報）
-  gl.bindBuffer(gl.ARRAY_BUFFER, colorVbo);
-  gl.enableVertexAttribArray(attLocation[1]);
-  gl.vertexAttribPointer(attLocation[1], attStride[1], gl.FLOAT, false, 0, 0);
+  // VBO を登録する
+  setAttribute(gl, [positionVbo, colorVbo], attLocation, attStride);
 
   // minMatrix.js を用いた行列関連処理
   // matIVオブジェクトを生成
@@ -180,4 +173,19 @@ function createVbo(gl, data) {
 
   // 生成した VBO を返して終了
   return vbo;
+}
+
+// VBOをバインドし登録する関数
+function setAttribute(gl, vbo, attL, attS) {
+  // 引数として受け取った配列を処理する
+  for (let i in vbo) {
+    // バッファをバインドする
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo[i]);
+
+    // attributeLocationを有効にする
+    gl.enableVertexAttribArray(attL[i]);
+
+    // attributeLocationを通知し登録する
+    gl.vertexAttribPointer(attL[i], attS[i], gl.FLOAT, false, 0, 0);
+  }
 }
